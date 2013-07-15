@@ -13,9 +13,11 @@
 		$scope.getData= function(){
 			var x = $.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&callback=?", {page:$scope.name, prop:"text"}, function(data) {useData(data)});
 			function useData(data){
-				console.log(data.parse.text);
-				$scope.data=data.parse.text['*'];
-				$scope.$apply();
+				var recievedData = data.parse.text['*'];
+				if(recievedData){
+					$scope.data=recievedData;
+					$scope.$apply();
+				}
 				//$scope.apply();
 				//console.log(data.parse.text['*']);
 			}
@@ -28,10 +30,10 @@
 <body ng-controller="WikiCtrl">
 	<h1> WikiDownloader</h1>
 	<span>
-		<input type="text" ng-click="testFunction();" ng-model="name"></input>
-		<button ng-click="getData();">Search</button>
+		<input type="text" ng-change = "getData()" ng-model="name"></input>
+		<button ng-click="getData()">Search</button>
 	</span>
 	<h2 ng-click = "testFunction()">Searching for: {{name}}</h2>
-	<h3 ng-click="printData();">Data Recieved: {{data}}</h3>
+	<h3 ng-click="printData()">Data Recieved: {{data}}</h3>
 </body>
 </html>
