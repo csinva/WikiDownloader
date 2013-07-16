@@ -11,7 +11,34 @@
 			console.log('test');
 		};
 		$scope.getData= function(){
-			var x = $.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&callback=?", {page:$scope.name, prop:"text"}, function(data) {useData(data)});
+
+		var x = $.ajax({
+		    url: 'http://en.wikipedia.org/w/api.php',
+  			data: {
+      			action:'query',
+				titles:$scope.name,
+				prop:"revisions",
+				rvprop:"content",
+      			format:'json'
+    		},
+    		dataType:'jsonp',
+    		success: function(data) {
+				var recievedData = false;
+				for (var pageId in data.query.pages) {
+   					if (data.query.pages.hasOwnProperty(pageId)) {
+   						console.log(data.query.pages[pageId].title);
+   						recievedData = data.query.pages[pageId].revisions[0]['*'];
+   					}
+				}
+				if(recievedData != false) {
+					$scope.data = recievedData;
+					$scope.$apply();
+				}
+			}
+		});
+
+		/*
+			var x = jQuery.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&callback=?", {page:$scope.name, prop:"text"}, function(data) {useData(data)});
 			function useData(data){
 				var recievedData = data.parse.text['*'];
 				if(recievedData){
@@ -20,7 +47,7 @@
 				}
 				//$scope.apply();
 				//console.log(data.parse.text['*']);
-			}
+			}*/
 		}
 		$scope.printData = function(){
 			console.log($scope.data);
