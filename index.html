@@ -11,30 +11,36 @@
 		$scope.testFunction = function(){
 			console.log('test');
 		};
-		$scope.getData= function(){
+		$scope.getData= function(searchName){
 
 		var x = $.ajax({
 		    url: 'http://en.wikipedia.org/w/api.php',
   			data: {
       			action:'query',
-				titles:$scope.name,
+				titles:searchName,
 				prop:"revisions",
 				rvprop:"content",
       			format:'json'
     		},
     		dataType:'jsonp',
     		success: function(data) {
-				var recievedData = false;
+				var recievedData;
 				for (var pageId in data.query.pages) {
    					if (data.query.pages.hasOwnProperty(pageId)) {
-   						console.log(data.query.pages[pageId].title);
    						recievedData = data.query.pages[pageId].revisions[0]['*'];
+						console.log('title ',data.query.pages[pageId].title,'data ',recievedData);
    					}
 				}
-				if(recievedData != false) {
-					$scope.data = recievedData;
-					$scope.$apply();
+				if (recievedData.indexOf('REDIRECT')!=-1){
+					var start = recievedData.indexOf('[[')+2;
+					var end = recievedData.indexOf(']]');
+					$scope.getData(recievedData.slice(start,end));
 				}
+				else if(recievedData) {
+					$scope.data = recievedData;
+					$scope.nameReal = searchName;					
+				}
+				$scope.$apply();
 			}
 		});
 
@@ -72,7 +78,7 @@
 		<h2>Searching for: {{nameReal}}</h2>
 	</span>
 	<span>
-		<textarea type="text" ng-change = "getData()" ng-model="name"></textarea>
+		<textarea type="text" ng-change = "getData(name)" ng-model="name"></textarea>
 		<h3 ng-click="printData()">Data Recieved: {{data}}</h3>
 	</span>
 	
