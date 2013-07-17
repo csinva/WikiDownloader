@@ -8,65 +8,44 @@
 </head>
 <script>
 	function WikiCtrl($scope){
-		$scope.testFunction = function(){
-			console.log('test');
-		};
-		$scope.getData= function(searchName){
-
-		var x = $.ajax({
-		    url: 'http://en.wikipedia.org/w/api.php',
-  			data: {
-      			action:'query',
-				titles:searchName,
-				prop:"revisions",
-				rvprop:"content",
-      			format:'json'
-    		},
-    		dataType:'jsonp',
-    		success: function(data) {
-				var recievedData;
-				for (var pageId in data.query.pages) {
-   					if (data.query.pages.hasOwnProperty(pageId)) {
-   						recievedData = data.query.pages[pageId].revisions[0]['*'];
-						console.log('title ',data.query.pages[pageId].title,'data ',recievedData);
-   					}
-				}
-				if (recievedData.indexOf('REDIRECT')!=-1){
-					var start = recievedData.indexOf('[[')+2;
-					var end = recievedData.indexOf(']]');
-					$scope.getData(recievedData.slice(start,end));
-				}
-				else if(recievedData) {
-					$scope.data = recievedData;
-					$scope.nameReal = searchName;					
-				}
-				$scope.$apply();
-			}
-		});
-
-		/*
-			var x = jQuery.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&callback=?", {page:$scope.name, prop:"text"}, function(data) {useData(data)});
-			function useData(data){
-				console.log(data);
-				if(data.parse){
-					$scope.nameReal=$scope.name;
-					$scope.data=data.parse.text['*'];
-					if($($scope.data).find('li').text().slice(0,8) == "REDIRECT"){
-						console.log($($scope.data).find('a'));
-						//$scope.nameReal=$
+		$scope.getDataForWord= function(searchName){
+			var x = $.ajax({
+				url: 'http://en.wikipedia.org/w/api.php',
+				data: {
+					action:'query',
+					titles:searchName,
+					prop:"revisions",
+					rvprop:"content",
+					format:'json'
+				},
+				dataType:'jsonp',
+				success: function(data) {
+					var recievedData;
+					for (var pageId in data.query.pages) {
+						if (data.query.pages.hasOwnProperty(pageId)) {
+							recievedData = data.query.pages[pageId].revisions[0]['*'];
+							//console.log('title ',data.query.pages[pageId].title,'data ',recievedData);
+						}
+					}
+					if (recievedData.indexOf('REDIRECT')!=-1){
+						var start = recievedData.indexOf('[[')+2;
+						var end = recievedData.indexOf(']]');
+						$scope.getDataForWord(recievedData.slice(start,end));
+					}
+					else if(recievedData) {
+						$scope.data[0] = recievedData;
+						$scope.data[1] = recievedData;
+						$scope.nameReal[0] = searchName;	
+						$scope.nameReal[1] = searchName;						
 					}
 					$scope.$apply();
-					
 				}
-				//$scope.apply();
-				//console.log(data.parse.text['*']);
-			}*/
+			});
 		}
-		$scope.printData = function(){
-			console.log($scope.data);
-		};
+		$scope.processString = function(searchString){
+		
+		}
 	}
-	//use this: http://angular-ui.github.io/bootstrap/
 </script> 
 
 <body ng-controller="WikiCtrl">
@@ -78,8 +57,15 @@
 		<h2>Searching for: {{nameReal}}</h2>
 	</span>
 	<span>
-		<textarea type="text" ng-change = "getData(name)" ng-model="name"></textarea>
-		<h3 ng-click="printData()">Data Recieved: {{data}}</h3>
+		<textarea type="text" ng-change = "getDataForWord(text); " ng-model="text"></textarea>
+		<table ng-init= "data = {};nameReal = {}">
+			<tr>
+				<td ng-repeat="datum in data">
+					<!--h2>Searching for: {{nameReal[number]}}</h2-->
+					<p>Data Recieved: {{datum}}</p>
+				</td>
+			</tr>
+		</table>
 	</span>
 	
 </body>
