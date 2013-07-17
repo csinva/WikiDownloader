@@ -2,7 +2,7 @@
 function sort(origText) {
 //array of unwanted words
 var uWords = new Array ("the", "with", "about", "all", "alone", "also", "am", "and", "as", "at", "because", "before", "beside", "besides", "between", "but", "by", "etc", "for", "i", "of", "on", "other", "others", "so", "than", "that", "though", "to", "too", "trough", "until");
-var minimumCharacterLength = 3; 
+var minimumCharacterLength = 2; 
 
 var wordArray = new Array ();
 var aKeywords = new Array ();

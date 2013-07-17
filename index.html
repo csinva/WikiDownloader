@@ -4,11 +4,12 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>	
 	<script src="lib/ui-bootstrap.js"></script>
+	<script src="sorter.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen">
 </head>
 <script>
 	function WikiCtrl($scope){
-		$scope.getDataForWord= function(searchName){
+		$scope.getDataForWord= function(searchName,index){
 			var x = $.ajax({
 				url: 'http://en.wikipedia.org/w/api.php',
 				data: {
@@ -30,20 +31,27 @@
 					if (recievedData.indexOf('REDIRECT')!=-1){
 						var start = recievedData.indexOf('[[')+2;
 						var end = recievedData.indexOf(']]');
-						$scope.getDataForWord(recievedData.slice(start,end));
+						$scope.getDataForWord(recievedData.slice(start,end),index);
 					}
 					else if(recievedData) {
-						$scope.data[0] = recievedData;
-						$scope.data[1] = recievedData;
-						$scope.nameReal[0] = searchName;	
-						$scope.nameReal[1] = searchName;						
+						$scope.data[index] = recievedData;
+						$scope.nameReal[index] = searchName;	
+						console.log(searchName);
 					}
 					$scope.$apply();
 				}
 			});
 		}
 		$scope.processString = function(searchString){
-		
+			var words = sort(searchString);
+			var index = 0;
+			for(word in words){
+				//console.log('words ',words,'index ',index,'words[index] ',words[index]);
+				$scope.getDataForWord(word,index);
+				index++;
+				if(index==3)
+					break;
+			}
 		}
 	}
 </script> 
@@ -53,16 +61,17 @@
 	<span>
 		<button popover-placement="top" popover="On the Top!" class="btn">Top</button>
 		
-		<button ng-click="getData()">Search</button>
+		<button>Search</button>
 		<h2>Searching for: {{nameReal}}</h2>
 	</span>
 	<span>
-		<textarea type="text" ng-change = "getDataForWord(text); " ng-model="text"></textarea>
-		<table ng-init= "data = {};nameReal = {}">
+		<textarea type="text" ng-change = "processString(text);" ng-model="text"></textarea>
+		<table ng-init= "data = {'0':' ','1':' ','2':' '};nameReal = {'0':' ','1':' ','2':' '};nums=[0,1,2]" style="border:1px solid blue;">
 			<tr>
-				<td ng-repeat="datum in data">
+				<td ng-repeat="num in nums" style="vertical-align:top;border:1px solid blue">
 					<!--h2>Searching for: {{nameReal[number]}}</h2-->
-					<p>Data Recieved: {{datum}}</p>
+					<h2 style="width:400px;">Searching For: {{nameReal[num]}}</h2>
+					<p style="width:400px">Data Recieved: {{data[num]}}</p>
 				</td>
 			</tr>
 		</table>
