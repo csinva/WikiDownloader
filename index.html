@@ -3,7 +3,8 @@
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>	
-	<script src="test.js"></script>
+	<script src="lib/ui-bootstrap.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen">
 </head>
 <script>
 	function WikiCtrl($scope){
@@ -40,10 +41,16 @@
 		/*
 			var x = jQuery.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&callback=?", {page:$scope.name, prop:"text"}, function(data) {useData(data)});
 			function useData(data){
-				var recievedData = data.parse.text['*'];
-				if(recievedData){
-					$scope.data=recievedData;
+				console.log(data);
+				if(data.parse){
+					$scope.nameReal=$scope.name;
+					$scope.data=data.parse.text['*'];
+					if($($scope.data).find('li').text().slice(0,8) == "REDIRECT"){
+						console.log($($scope.data).find('a'));
+						//$scope.nameReal=$
+					}
 					$scope.$apply();
+					
 				}
 				//$scope.apply();
 				//console.log(data.parse.text['*']);
@@ -53,14 +60,21 @@
 			console.log($scope.data);
 		};
 	}
+	//use this: http://angular-ui.github.io/bootstrap/
 </script> 
+
 <body ng-controller="WikiCtrl">
 	<h1> WikiDownloader</h1>
 	<span>
-		<input type="text" ng-change = "getData()" ng-model="name"></input>
+		<button popover-placement="top" popover="On the Top!" class="btn">Top</button>
+		
 		<button ng-click="getData()">Search</button>
+		<h2>Searching for: {{nameReal}}</h2>
 	</span>
-	<h2 ng-click = "testFunction()">Searching for: {{name}}</h2>
-	<h3 ng-click="printData()">Data Recieved: {{data}}</h3>
+	<span>
+		<textarea type="text" ng-change = "getData()" ng-model="name"></textarea>
+		<h3 ng-click="printData()">Data Recieved: {{data}}</h3>
+	</span>
+	
 </body>
 </html>
