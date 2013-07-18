@@ -38,8 +38,6 @@ skinnyRow{
 p{
 	color:#CBCBCB;
 	width:400px;
-	overflow:hidden;
-	height:100px;
 }
 textarea:focus, td:focus{
 	outline: 1px solid #197CBF;
