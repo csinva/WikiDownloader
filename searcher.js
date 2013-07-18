@@ -2,7 +2,11 @@ function searchData(searchString,data){
 	var source = {'ref':'None','text':'None','hits':0};
 	var sources = {};
 	var index = 0;
+	var HITS = 0;
 	while(data.search(searchString)!=-1){	//search for word, keep looking up word counting until you get to source then save source / text / number of hits
+		HITS++;
+		data = data.slice(data.search(searchString));
+		/*
 		var start = data.search(searchString);
 		data = data.slice(start);
 		var end = data.search('<ref');
@@ -17,7 +21,9 @@ function searchData(searchString,data){
 		tempSource['hits']=numHits;
 		tempSource['ref']=sourceReference;
 		sources[index] = tempSource;
+		*/
 	}
+	
 	//need to implement picking the source with the most hits
-	return sources[0];
+	return HITS;
 }

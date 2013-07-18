@@ -39,7 +39,6 @@
 						$scope.nameReal[index] = searchName;	
 						//console.log(searchName);
 					}
-					$scope.$apply();
 				}
 			});
 		}
@@ -53,6 +52,7 @@
 				if(index==3)
 					break;
 			}
+			$scope.$apply();
 			$scope.searchSources();
 		}
 		$scope.searchSources = function(){ //searches 
@@ -67,7 +67,7 @@
 						index +=1;
 					}
 				}
-			}
+			}			
 		}
 	}
 </script> 
@@ -87,15 +87,15 @@
 				</td>
 			</tr>
 			<tr>
-				<td ng-repeat="datum in data">
-					<p>Data Recieved: {{datum}}</p>
-				</td>
-			</tr>
-			<tr>
 				<td class="skinnyRow" ng-repeat="source in sources">
 					<p class="skinnyRow">Source: {{source}}</p>
 				</td>
 			</tr>
+			<tr>
+				<td ng-repeat="datum in data">
+					<p>Data Recieved: {{datum}}</p>
+				</td>
+			</tr>			
 		</table>
 	</span>
 	
