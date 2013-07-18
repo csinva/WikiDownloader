@@ -43,16 +43,11 @@
 			});
 		}
 		$scope.processString = function(searchString){
-			var words = sort(searchString);
-			var index = 0;
-			for(word in words){
-				//console.log('words ',words,'index ',index,'words[index] ',words[index]);
-				$scope.getDataForWord(word,index);
-				index++;
-				if(index==3)
-					break;
-			}
-			$scope.$apply();
+			var len = searchString.length;
+			if(len>10)
+				searchString = searchString.split(len-10,len);
+			var word = searchString.split(' ')[0];
+			$scope.getDataForWord(word,0);
 			$scope.searchSources();
 		}
 		$scope.searchSources = function(){ //searches 
@@ -84,11 +79,6 @@
 				<td ng-repeat="name in nameReal">
 					<!--h2>Searching for: {{nameReal[number]}}</h2-->
 					<h3>Searching For: {{name}}</h3>
-				</td>
-			</tr>
-			<tr>
-				<td class="skinnyRow" ng-repeat="source in sources">
-					<p class="skinnyRow">Source: {{source}}</p>
 				</td>
 			</tr>
 			<tr>
