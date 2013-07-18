@@ -5,6 +5,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>	
 	<script src="lib/ui-bootstrap.js"></script>
 	<script src="sorter.js"></script>
+	<script src="searcher.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen">
 </head>
 <script>
@@ -36,7 +37,7 @@
 					else if(recievedData) {
 						$scope.data[index] = recievedData;
 						$scope.nameReal[index] = searchName;	
-						console.log(searchName);
+						//console.log(searchName);
 					}
 					$scope.$apply();
 				}
@@ -52,6 +53,21 @@
 				if(index==3)
 					break;
 			}
+			$scope.searchSources();
+		}
+		$scope.searchSources = function(){ //searches 
+			$scope.sources = {};
+			var index = 0;
+			for(selectedIndex in $scope.nameReal){
+				var searchName = $scope.nameReal[selectedIndex];
+				for(notSelectedIndex in $scope.nameReal){
+					if(selectedIndex!=notSelectedIndex){
+						var selectedData = $scope.data[notSelectedIndex];
+						$scope.sources[index] = searchData(searchName,selectedData);
+						index +=1;
+					}
+				}
+			}
 		}
 	}
 </script> 
@@ -59,19 +75,25 @@
 <body ng-controller="WikiCtrl">
 	<h1> WikiDownloader</h1>
 	<span>
-		<button popover-placement="top" popover="On the Top!" class="btn">Top</button>
-		
-		<button>Search</button>
-		<h2>Searching for: {{nameReal}}</h2>
+		<h3>Searching for: {{nameReal}}</h3>
 	</span>
 	<span>
-		<textarea type="text" ng-change = "processString(text);" ng-model="text"></textarea>
-		<table ng-init= "data = {'0':' ','1':' ','2':' '};nameReal = {'0':' ','1':' ','2':' '};nums=[0,1,2]" style="border:1px solid blue;">
+		<textarea placeholder = "ENTER TEXT HERE" type="text" ng-change = "processString(text);" ng-model="text"></textarea>
+		<table ng-init= "data = {};nameReal = {};">
 			<tr>
-				<td ng-repeat="num in nums" style="vertical-align:top;border:1px solid blue">
+				<td ng-repeat="name in nameReal">
 					<!--h2>Searching for: {{nameReal[number]}}</h2-->
-					<h2 style="width:400px;">Searching For: {{nameReal[num]}}</h2>
-					<p style="width:400px">Data Recieved: {{data[num]}}</p>
+					<h3>Searching For: {{name}}</h3>
+				</td>
+			</tr>
+			<tr>
+				<td ng-repeat="datum in data">
+					<p>Data Recieved: {{datum}}</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="skinnyRow" ng-repeat="source in sources">
+					<p class="skinnyRow">Source: {{source}}</p>
 				</td>
 			</tr>
 		</table>

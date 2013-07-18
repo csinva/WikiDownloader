@@ -1,29 +1,47 @@
 body {background-color:white;}
 
-textarea[type=text]
+textarea
 {
-    background-color: #BFBDBD;
-    border:solid 1px #BFBDBD;
-    color: #979797;
+    background-color: white;
+    border:1px blue;
     height: 'auto';
     padding-left:10px;
-    width: 'auto';
-    box-shadow: 2px 2px 0 #828181 inset;
-}
-textarea[type=button]
-{
-    background-color: #1E1E1E;
-    color: #979797;
-    height: 24px;
-    width: 103px;
-    color: #bbbbbb;
-    text-transform:uppercase;
-    box-shadow:-1px 2px #6E6B6A inset;
+    width: 99%;
+	outline: 1px solid #A2A2A2;
 }
 
-textarea[type=button], textarea[type=text]
-{
-    border: 0;
-    border-radius:5px;
-    font-family: Sansation,Arial;
+table{
+	border:1px white;
+	width:100%;
 }
+table:hover{
+	border:1px blue;
+}
+h1, h3{
+	width:99%;
+}
+tr:hover td{
+	outline:.5px blue;
+}
+tr:td hover{
+	outline:.5px blue;
+}
+td{
+	background-color: #EBEBEB;
+	vertical-align:top;
+	outline:.5px white;
+	width:33%;
+}
+skinnyRow{
+	width:10%;
+}
+p{
+	color:#CBCBCB;
+	width:400px;
+	overflow:hidden;
+	height:100px;
+}
+textarea:focus, td:focus{
+	outline: 1px solid #197CBF;
+}
+
